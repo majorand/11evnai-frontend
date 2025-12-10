@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Protected from "../componets/Protected";
-import ThreeDViewer from "../components/ThreeDViewer";
-import ThreeDGeneratePanel from "../components/ThreeDGeneratePanel";
-import ThreeDFromImagePanel from "../components/ThreeDFromImagePanel";
+import ThreeDViewer from "../componets/ThreeDViewer";
+import ThreeDGeneratePanel from "../componets/ThreeDGeneratePanel";
+import ThreeDFromImagePanel from "../componets/ThreeDFromImagePanel";
 
 export default function ThreeDPage() {
   const [modelUrl, setModelUrl] = useState<string | null>(null);
