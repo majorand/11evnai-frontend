@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Protected from "../components/Protected";
+import Protected from "../componets/Protected";
 import ThreeDViewer from "../components/ThreeDViewer";
 import ThreeDGeneratePanel from "../components/ThreeDGeneratePanel";
 import ThreeDFromImagePanel from "../components/ThreeDFromImagePanel";
