@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Protected from "../components/Protected";
+import Protected from "./components/Protected";
 import { backend } from "../../lib/api";
-import AdminStatCard from "../components/AdminStatCard";
-import AdminActivityFeed from "../components/AdminActivityFeed";
-import AdminTable from "../components/AdminTable";
+import AdminStatCard from "./components/AdminStatCard";
+import AdminActivityFeed from "./components/AdminActivityFeed";
+import AdminTable from "./components/AdminTable";
 import { supabase } from "../../lib/supabaseClient";
 
 export default function AdminPage() {
