@@ -1,21 +1,43 @@
 "use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
 
-export default function Navbar() {
+export default function NavBar() {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data } = await supabase.auth.getUser();
+      const user = data.user;
+      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
+      if (user && user.email === adminEmail) {
+        setIsAdmin(true);
+      }
+    };
+
+    checkAdmin();
+  }, []);
+
   return (
-    <nav className="px-6 py-4 bg-white border-b shadow-sm flex justify-between items-center">
-      <Link href="/" className="text-2xl font-bold text-brand">
-        11evnai
-      </Link>
+    <nav className="w-full border-b bg-white">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-xl font-bold text-brand">
+          11evnai
+        </Link>
 
-      <div className="flex space-x-6 text-gray-700">
-        <Link href="/chat">Chat</Link>
-        <Link href="/vision">Vision</Link>
-        <Link href="/audio">Audio</Link>
-        <Link href="/images">Images</Link>
-        <Link href="/video">Video</Link>
-        <Link href="/3d">3D</Link>
-        <Link href="/admin">Admin</Link>
+        <div className="flex gap-6 text-sm font-medium">
+          <Link href="/chatpage">Chat</Link>
+          <Link href="/visionpage">Vision</Link>
+          <Link href="/audiopage">Audio</Link>
+          <Link href="/imagespage">Images</Link>
+          <Link href="/videopage">Video</Link>
+          <Link href="/3dpage">3D</Link>
+
+          {isAdmin && <Link href="/adminpage">Admin</Link>}
+        </div>
       </div>
     </nav>
   );
