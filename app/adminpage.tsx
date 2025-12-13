@@ -6,6 +6,7 @@ import { backend } from "../lib/api";
 import AdminStatCard from "./components/AdminStatCard";
 import AdminActivityFeed from "./components/AdminActivityFeed";
 import AdminTable from "./components/AdminTable";
+import Skeleton from "./components/Skeleton";
 import { supabase } from "../lib/supabaseClient";
 
 
