@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { backend } from "../lib/api";
+import { backend } from "../../lib/api";
 
 type VideoToolPanelProps = {
   endpoint: string;
