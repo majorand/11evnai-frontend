@@ -1,24 +1,26 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Stage, useGLTF } from "@react-three/drei";
+type ThreeDViewerProps = {
+  url: string;
+};
 
-export default function ThreeDViewer({ url }: { url: string }) {
-  function Model() {
-    const gltf = useGLTF(url);
-    return <primitive object={gltf.scene} />;
-  }
-
-  if (!url) return null;
-
+export default function ThreeDViewer({ url }: ThreeDViewerProps) {
   return (
-    <div className="mt-6 h-[500px] rounded-lg border shadow overflow-hidden">
-      <Canvas camera={{ position: [3, 3, 3] }}>
-        <Stage>
-          <Model />
-        </Stage>
-        <OrbitControls />
-      </Canvas>
+    <div className="w-full h-[400px] flex items-center justify-center border rounded-lg bg-gray-100">
+      <div className="text-center space-y-2">
+        <p className="font-semibold text-gray-700">3D Preview</p>
+        <p className="text-sm text-gray-500">
+          3D viewer temporarily disabled for production build.
+        </p>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 underline text-sm"
+        >
+          Open model file
+        </a>
+      </div>
     </div>
   );
 }
