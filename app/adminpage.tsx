@@ -77,7 +77,11 @@ export default function AdminPage() {
             </div>
 
             <AdminActivityFeed logs={activity} />
-            <AdminTable users={users} />
+            <AdminTable
+  		  headers={["Email", "Role", "Created At"]}
+  		  rows={users}
+		/>
+
           </>
         )}
       </div>
