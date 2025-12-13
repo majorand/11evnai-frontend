@@ -52,36 +52,29 @@ export default function AdminPage() {
     );
 
  if (!stats)
+  export default function AdminPage() {
+  const [loading, setLoading] = useState(true);
+
   return (
-    <div className="max-w-5xl mx-auto mt-10 space-y-6">
-      <Skeleton height="80px" />
-      <Skeleton height="80px" />
-      <Skeleton height="80px" />
-      <Skeleton height="200px" />
-    </div>
-  );
-
     <Protected>
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-brand mb-6">Admin Dashboard</h1>
+      <div className="max-w-5xl mx-auto mt-10 space-y-6">
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <AdminStatCard title="Total Users" value={stats.total_users} />
-          <AdminStatCard title="Total Chats" value={stats.total_chats} />
-          <AdminStatCard title="Total Messages" value={stats.total_messages} />
-        </div>
+        {loading ? (
+          <>
+            <Skeleton height="80px" />
+            <Skeleton height="80px" />
+            <Skeleton height="200px" />
+          </>
+        ) : (
+          <>
+            <AdminStatCard />
+            <AdminActivityFeed />
+            <AdminTable />
+          </>
+        )}
 
-        {/* Activity */}
-        <AdminActivityFeed logs={activity} />
-
-        {/* User List */}
-        <h2 className="text-2xl font-semibold mt-10 mb-4">User List</h2>
-        <AdminTable
-          headers={["id", "email", "created_at"]}
-          rows={users}
-        />
       </div>
     </Protected>
   );
 }
+
