@@ -8,6 +8,7 @@ import AdminActivityFeed from "./components/AdminActivityFeed";
 import AdminTable from "./components/AdminTable";
 import { supabase } from "../lib/supabaseClient";
 
+
 export default function AdminPage() {
   const [stats, setStats] = useState<any>(null);
   const [activity, setActivity] = useState<any[]>([]);
