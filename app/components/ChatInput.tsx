@@ -3,56 +3,46 @@
 import { useState } from "react";
 import { backend } from "../../lib/api";
 
-type Sender = "user" | "ai";
-
 export default function ChatInput({
-  chatId,
   onSend,
 }: {
-  chatId: number;
-  onSend: (msg: string, sender: Sender) => void;
+  onSend: (msg: string, reply: string) => void;
 }) {
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const sendMsg = async () => {
+  const send = async () => {
     if (!message.trim()) return;
 
-    // optimistic user message
-    onSend(message, "user");
-
-    const formData = new FormData();
-    formData.append("message", message);
-    formData.append("chat_id", String(chatId)); // ✅ FIX
+    setLoading(true);
 
     const res = await backend("/chat/send", {
       method: "POST",
-      body: formData,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
     });
 
     const data = await res.json();
 
-    if (data?.reply) {
-      onSend(data.reply, "ai");
-    }
-
+    onSend(message, data.reply);
     setMessage("");
+    setLoading(false);
   };
 
   return (
-    <div className="flex items-center p-4 bg-white border-t">
+    <div className="flex gap-2">
       <input
-        className="flex-1 border px-4 py-2 rounded mr-3"
-        placeholder="Ask 11evnai anything…"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && sendMsg()}
+        className="flex-1 border rounded px-3 py-2"
+        placeholder="Say something…"
       />
-
       <button
-        className="bg-brand text-white px-4 py-2 rounded font-semibold"
-        onClick={sendMsg}
+        onClick={send}
+        disabled={loading}
+        className="bg-black text-white px-4 rounded"
       >
-        Send
+        {loading ? "…" : "Send"}
       </button>
     </div>
   );
