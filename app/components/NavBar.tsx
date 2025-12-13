@@ -2,34 +2,39 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
-export default function Navbar() {
-  const [isAdmin, setIsAdmin] = useState(false);
+export default function NavBar() {
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const checkAdmin = async () => {
-      const { data } = await supabase.auth.getUser();
-      const user = data.user;
-      if (!user) return;
-
-      if (user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-        setIsAdmin(true);
-      }
-    };
-
-    checkAdmin();
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
   }, []);
 
-  return (
-    <nav className="flex gap-6 p-4 border-b">
-      <Link href="/chat">Chat</Link>
-      <Link href="/vision">Vision</Link>
-      <Link href="/images">Images</Link>
-      <Link href="/video">Video</Link>
-      <Link href="/3d">3D</Link>
+  const logout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  };
 
-      {isAdmin && <Link href="/admin">Admin</Link>}
+  return (
+    <nav className="flex items-center justify-between px-6 py-4 border-b">
+      <div className="flex gap-4">
+        <Link href="/">Home</Link>
+        <Link href="/chat">Chat</Link>
+        {user && <Link href="/admin">Admin</Link>}
+      </div>
+
+      <div>
+        {user ? (
+          <button onClick={logout} className="text-red-500">
+            Logout
+          </button>
+        ) : (
+          <Link href="/login">Login</Link>
+        )}
+      </div>
     </nav>
   );
 }

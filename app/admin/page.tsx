@@ -1,26 +1,42 @@
-import { redirect } from "next/navigation";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+"use client";
 
-export default async function AdminPage() {
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies }
-  );
+import { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
+import { backend } from "../../lib/api";
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default function AdminPage() {
+  const [allowed, setAllowed] = useState<boolean | null>(null);
 
-  if (!user || user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-    redirect("/login");
-  }
+  useEffect(() => {
+    const check = async () => {
+      const { data } = await supabase.auth.getUser();
+      const user = data.user;
+
+      if (!user) {
+        window.location.href = "/login";
+        return;
+      }
+
+      if (user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+        setAllowed(false);
+        return;
+      }
+
+      setAllowed(true);
+    };
+
+    check();
+  }, []);
+
+  if (allowed === null) return <div className="p-10">Loading…</div>;
+
+  if (allowed === false)
+    return <div className="p-10 text-red-500">Not authorized</div>;
 
   return (
-    <div className="p-8">
+    <div className="p-10">
       <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-      <p>Protected admin content</p>
+      <p className="mt-4">You are signed in as admin.</p>
     </div>
   );
 }
