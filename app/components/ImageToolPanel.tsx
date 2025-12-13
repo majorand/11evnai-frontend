@@ -11,10 +11,18 @@ export default function ImageToolPanel({
 }) {
   if (!file) return null;
 
-  const runTool = async (endpoint: string, extra?: any) => {
+  const runTool = async (
+    endpoint: string,
+    extra?: Record<string, string>
+  ) => {
     const form = new FormData();
     form.append("file", file);
-    if (extra) Object.entries(extra).forEach(([k, v]) => form.append(k, v));
+
+    if (extra) {
+      Object.entries(extra).forEach(([key, value]) => {
+        form.append(key, String(value)); // ✅ TS-safe
+      });
+    }
 
     const res = await backend(`/images/${endpoint}`, {
       method: "POST",
@@ -50,7 +58,7 @@ export default function ImageToolPanel({
 
       <button
         onClick={() => {
-          const prompt = prompt("Enter img2img prompt:");
+          const prompt = window.prompt("Enter img2img prompt:");
           if (prompt) runTool("img2img", { prompt });
         }}
         className="bg-brand text-white px-4 py-2 rounded"
@@ -60,18 +68,19 @@ export default function ImageToolPanel({
 
       <button
         onClick={() => {
-          const prompt = prompt("Describe what to inpaint/outpaint:");
+          const prompt = window.prompt("Describe what to inpaint/outpaint:");
           if (!prompt) return;
 
-          const mask = document.createElement("input");
-          mask.type = "file";
-          mask.accept = "image/*";
+          const maskInput = document.createElement("input");
+          maskInput.type = "file";
+          maskInput.accept = "image/*";
 
-          mask.onchange = async () => {
-            if (!mask.files?.[0]) return;
+          maskInput.onchange = async () => {
+            if (!maskInput.files?.[0]) return;
+
             const form = new FormData();
             form.append("file", file);
-            form.append("mask", mask.files[0]);
+            form.append("mask", maskInput.files[0]);
             form.append("prompt", prompt);
 
             const res = await backend("/images/inpaint", {
@@ -83,7 +92,7 @@ export default function ImageToolPanel({
             setResult(URL.createObjectURL(blob));
           };
 
-          mask.click();
+          maskInput.click();
         }}
         className="bg-brand text-white px-4 py-2 rounded"
       >
