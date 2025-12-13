@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Protected from "../components/Protected";
-import AudioRecorder from "../components/AudioRecorder";
-import AudioUploadBox from "../components/AudioUploadBox";
-import { backend } from "../../lib/api";
+import Protected from "./components/Protected";
+import AudioRecorder from "./components/AudioRecorder";
+import AudioUploadBox from "./components/AudioUploadBox";
+import { backend } from "../lib/api";
 
 export default function AudioPage() {
   const [file, setFile] = useState<File | null>(null);

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import ImageUploadBox from "../components/ImageUploadBox";
-import VisionResult from "../components/VisionResult";
-import { backend } from "../../lib/api";
-import Protected from "../components/Protected";
+import ImageUploadBox from "./components/ImageUploadBox";
+import VisionResult from "./components/VisionResult";
+import { backend } from "../lib/api";
+import Protected from "./components/Protected";
 
 export default function VisionPage() {
   const [file, setFile] = useState<File | null>(null);

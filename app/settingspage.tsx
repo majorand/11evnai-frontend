@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Protected from "../components/Protected";
-import SettingToggle from "../components/SettingToggle";
-import ModelSelector from "../components/ModelSelector";
-import CreativitySlider from "../components/CreativitySlider";
+import Protected from "./components/Protected";
+import SettingToggle from "./components/SettingToggle";
+import ModelSelector from "./components/ModelSelector";
+import CreativitySlider from "./components/CreativitySlider";
 
 export default function SettingsPage() {
   const [darkMode, setDarkMode] = useState(false);

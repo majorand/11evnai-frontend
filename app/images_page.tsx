@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Protected from "../components/Protected";
-import ImageUploadBox from "../components/ImageUploadBox";
-import ImageToolPanel from "../components/ImageToolPanel";
-import ImagePreview from "../components/ImagePreview";
+import Protected from "./components/Protected";
+import ImageUploadBox from "./components/ImageUploadBox";
+import ImageToolPanel from "./components/ImageToolPanel";
+import ImagePreview from "./components/ImagePreview";
 
 export default function ImagesPage() {
   const [file, setFile] = useState<File | null>(null);
