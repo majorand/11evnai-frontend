@@ -17,10 +17,15 @@ export default function ChatInput({
 
     onSend(message);
 
+    const formData = new FormData();
+    formData.append("message", message);
+    formData.append("chat_id", chatId);
+
     const res = await backend("/chat/send", {
-      method: "POST",
-      body: new FormData().append("message", message).append("chat_id", chatId),
-    });
+     method: "POST",
+     body: formData,
+});
+
 
     const data = await res.json();
     onSend(data.reply, "ai");
