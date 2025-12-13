@@ -51,24 +51,24 @@ export default function AdminPage() {
     load();
   }, []);
 
-  if (isAdmin === false) {
-    return (
-      <div className="p-10 text-center text-red-600 text-xl font-semibold">
-        Access denied: Admin only
-      </div>
-    );
-  }
-
   return (
     <Protected>
       <div className="max-w-5xl mx-auto mt-10 space-y-6">
-        {loading ? (
+        {loading && (
           <>
             <Skeleton height="80px" />
             <Skeleton height="80px" />
             <Skeleton height="200px" />
           </>
-        ) : (
+        )}
+
+        {!loading && isAdmin === false && (
+          <div className="text-center text-red-500 font-semibold">
+            You are not authorized to view this page.
+          </div>
+        )}
+
+        {!loading && isAdmin && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <AdminStatCard title="Users" value={stats?.users ?? 0} />
@@ -76,4 +76,11 @@ export default function AdminPage() {
               <AdminStatCard title="Videos Generated" value={stats?.videos ?? 0} />
             </div>
 
-            <AdminActivityFeed
+            <AdminActivityFeed activity={activity} />
+            <AdminTable users={users} />
+          </>
+        )}
+      </div>
+    </Protected>
+  );
+}
