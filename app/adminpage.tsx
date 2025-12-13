@@ -6,7 +6,7 @@ import { backend } from "../lib/api";
 import AdminStatCard from "./components/AdminStatCard";
 import AdminActivityFeed from "./components/AdminActivityFeed";
 import AdminTable from "./components/AdminTable";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "../lib/supabaseClient";
 
 export default function AdminPage() {
   const [stats, setStats] = useState<any>(null);
