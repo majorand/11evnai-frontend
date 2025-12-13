@@ -76,7 +76,7 @@ export default function AdminPage() {
               <AdminStatCard title="Videos Generated" value={stats?.videos ?? 0} />
             </div>
 
-            <AdminActivityFeed activity={activity} />
+            <AdminActivityFeed logs={activity} />
             <AdminTable users={users} />
           </>
         )}
