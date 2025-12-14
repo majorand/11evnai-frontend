@@ -8,24 +8,22 @@ import ImagePreview from "../components/ImagePreview";
 
 export default function ImagesPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [resultUrl, setResultUrl] = useState<string | null>(null);
 
   return (
     <Protected>
-      <div className="max-w-5xl mx-auto p-6 space-y-6">
+      <div className="max-w-5xl mx-auto mt-10 space-y-6">
         <h1 className="text-2xl font-bold">Image Tools</h1>
 
-        <ImageUploadBox onSelect={setFile} />
+        <ImageUploadBox onUpload={setFile} />
 
         {file && (
-          <ImageToolPanel
-            file={file}
-            onResult={(url) => setResultUrl(url)}
-          />
+          <>
+            <ImageToolPanel file={file} />
+            <ImagePreview file={file} />
+          </>
         )}
-
-        {resultUrl && <ImagePreview src={resultUrl} />}
       </div>
     </Protected>
   );
 }
+
