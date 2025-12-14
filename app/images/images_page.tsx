@@ -1,30 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import Protected from "./components/Protected";
-import ImageUploadBox from "./components/ImageUploadBox";
-import ImageToolPanel from "./components/ImageToolPanel";
-import ImagePreview from "./components/ImagePreview";
+import Protected from "../components/Protected";
+import ImageUploadBox from "../components/ImageUploadBox";
+import ImageToolPanel from "../components/ImageToolPanel";
+import ImagePreview from "../components/ImagePreview";
 
 export default function ImagesPage() {
   const [file, setFile] = useState<File | null>(null);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
 
-  const handleUpload = (f: File) => {
-    setFile(f);
-    setResultUrl(null);
-  };
-
   return (
     <Protected>
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-brand mb-6">Image AI Tools</h1>
+      <div className="max-w-5xl mx-auto p-6 space-y-6">
+        <h1 className="text-2xl font-bold">Image Tools</h1>
 
-        {!file && <ImageUploadBox onUpload={handleUpload} />}
+        <ImageUploadBox onSelect={setFile} />
 
-        <ImageToolPanel file={file} setResult={setResultUrl} />
+        {file && (
+          <ImageToolPanel
+            file={file}
+            onResult={(url) => setResultUrl(url)}
+          />
+        )}
 
-        <ImagePreview original={file} result={resultUrl} />
+        {resultUrl && <ImagePreview src={resultUrl} />}
       </div>
     </Protected>
   );
