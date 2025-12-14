@@ -1,40 +1,31 @@
 "use client";
 
-import ChatInput from "../components/ChatInput";
-import { useState } from "react";
-
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
+import { useSearchParams } from "next/navigation";
+import Sidebar from "./components/Sidebar";
+import ChatWindow from "./components/ChatWindow";
+import Protected from "./components/Protected";
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const searchParams = useSearchParams();
+  const chatIdParam = searchParams.get("id");
+
+  const chatId =
+    chatIdParam && !Number.isNaN(Number(chatIdParam))
+      ? Number(chatIdParam)
+      : null;
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 space-y-4">
-      <div className="border rounded p-4 min-h-[400px] space-y-3">
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            className={m.role === "user" ? "text-right" : "text-left"}
-          >
-            <span className="inline-block px-3 py-2 rounded bg-gray-200">
-              {m.content}
-            </span>
+    <Protected>
+      <div className="flex h-screen">
+        <Sidebar />
+        {chatId !== null ? (
+          <ChatWindow chatId={chatId} />
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-gray-500">
+            Select a chat
           </div>
-        ))}
+        )}
       </div>
-
-      <ChatInput
-        onSend={(msg, reply) =>
-          setMessages((prev) => [
-            ...prev,
-            { role: "user", content: msg },
-            { role: "assistant", content: reply },
-          ])
-        }
-      />
-    </div>
+    </Protected>
   );
 }
