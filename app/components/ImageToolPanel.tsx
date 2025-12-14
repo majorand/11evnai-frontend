@@ -1,102 +1,40 @@
 "use client";
 
-import { backend } from "../../lib/api";
+import { useState } from "react";
+import { backend } from "@/lib/api";
 
-export default function ImageToolPanel({
-  file,
-  setResult,
-}: {
-  file: File | null;
+type Props = {
+  file: File;
   setResult: (url: string) => void;
-}) {
-  if (!file) return null;
+};
 
-  const runTool = async (
-    endpoint: string,
-    extra?: Record<string, string>
-  ) => {
+export default function ImageToolPanel({ file, setResult }: Props) {
+  const [loading, setLoading] = useState(false);
+
+  const runTool = async () => {
+    setLoading(true);
+
     const form = new FormData();
     form.append("file", file);
 
-    if (extra) {
-      Object.entries(extra).forEach(([key, value]) => {
-        form.append(key, String(value)); // ✅ TS-safe
-      });
-    }
-
-    const res = await backend(`/images/${endpoint}`, {
+    const res = await backend("/images/generate", {
       method: "POST",
       body: form,
     });
 
-    const blob = await res.blob();
-    setResult(URL.createObjectURL(blob));
+    const data = await res.json();
+    setResult(data.url);
+    setLoading(false);
   };
 
   return (
-    <div className="flex flex-wrap gap-4 mt-6">
+    <div className="flex gap-4">
       <button
-        onClick={() => runTool("remove-bg")}
+        onClick={runTool}
+        disabled={loading}
         className="bg-brand text-white px-4 py-2 rounded"
       >
-        Remove Background
-      </button>
-
-      <button
-        onClick={() => runTool("face-enhance")}
-        className="bg-brand text-white px-4 py-2 rounded"
-      >
-        Enhance Face
-      </button>
-
-      <button
-        onClick={() => runTool("upscale")}
-        className="bg-brand text-white px-4 py-2 rounded"
-      >
-        Upscale to 4K
-      </button>
-
-      <button
-        onClick={() => {
-          const prompt = window.prompt("Enter img2img prompt:");
-          if (prompt) runTool("img2img", { prompt });
-        }}
-        className="bg-brand text-white px-4 py-2 rounded"
-      >
-        Image → Image
-      </button>
-
-      <button
-        onClick={() => {
-          const prompt = window.prompt("Describe what to inpaint/outpaint:");
-          if (!prompt) return;
-
-          const maskInput = document.createElement("input");
-          maskInput.type = "file";
-          maskInput.accept = "image/*";
-
-          maskInput.onchange = async () => {
-            if (!maskInput.files?.[0]) return;
-
-            const form = new FormData();
-            form.append("file", file);
-            form.append("mask", maskInput.files[0]);
-            form.append("prompt", prompt);
-
-            const res = await backend("/images/inpaint", {
-              method: "POST",
-              body: form,
-            });
-
-            const blob = await res.blob();
-            setResult(URL.createObjectURL(blob));
-          };
-
-          maskInput.click();
-        }}
-        className="bg-brand text-white px-4 py-2 rounded"
-      >
-        Inpainting / Outpainting
+        {loading ? "Processing..." : "Generate Image"}
       </button>
     </div>
   );

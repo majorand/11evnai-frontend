@@ -1,38 +1,34 @@
 "use client";
 
-export default function ImagePreview({
-  original,
-  result,
-}: {
-  original: File | null;
+type Props = {
+  original: File;
   result: string | null;
-}) {
-  if (!original) return null;
+};
 
+export default function ImagePreview({ original, result }: Props) {
   return (
     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <h3 className="text-lg font-semibold mb-2 text-gray-700">Original</h3>
+        <h3 className="font-semibold mb-2">Original</h3>
         <img
           src={URL.createObjectURL(original)}
-          className="rounded-lg shadow max-h-96 mx-auto"
+          className="rounded shadow max-h-96"
         />
       </div>
 
       {result && (
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-brand">Result</h3>
+          <h3 className="font-semibold mb-2">Result</h3>
           <img
             src={result}
-            className="rounded-lg shadow max-h-96 mx-auto border-2 border-brand"
+            className="rounded shadow max-h-96 border-2 border-brand"
           />
-
           <a
             href={result}
-            download="11evnai_image.png"
-            className="mt-3 block text-center bg-brand text-white py-2 rounded"
+            download
+            className="block mt-3 text-center bg-brand text-white py-2 rounded"
           >
-            Download Image
+            Download
           </a>
         </div>
       )}
