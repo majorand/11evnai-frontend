@@ -1,16 +1,16 @@
-export default function VisionResult({
-  title,
-  result,
-}: {
-  title: string;
+"use client";
+
+type Props = {
   result: string | null;
-}) {
+};
+
+export default function VisionResult({ result }: Props) {
   if (!result) return null;
 
   return (
-    <div className="bg-white p-6 rounded-lg border shadow mt-6">
-      <h3 className="text-xl font-semibold text-brand mb-2">{title}</h3>
-      <pre className="whitespace-pre-wrap text-gray-700">{result}</pre>
+    <div className="mt-6 p-4 border rounded bg-gray-50">
+      <h3 className="font-semibold mb-2">Vision Result</h3>
+      <pre className="whitespace-pre-wrap text-sm">{result}</pre>
     </div>
   );
 }
