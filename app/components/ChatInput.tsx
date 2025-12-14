@@ -3,46 +3,59 @@
 import { useState } from "react";
 import { backend } from "../../lib/api";
 
-export default function ChatInput({
-  onSend,
-}: {
-  onSend: (msg: string, reply: string) => void;
-}) {
+type ChatInputProps = {
+  chatId: number;
+  onSend: (content: string, sender?: "user" | "ai") => void;
+};
+
+export default function ChatInput({ chatId, onSend }: ChatInputProps) {
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const send = async () => {
-    if (!message.trim()) return;
+  async function send() {
+    if (!message.trim() || sending) return;
 
-    setLoading(true);
-
-    const res = await backend("/chat/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
-    });
-
-    const data = await res.json();
-
-    onSend(message, data.reply);
+    const content = message;
     setMessage("");
-    setLoading(false);
-  };
+    setSending(true);
+
+    onSend(content, "user");
+
+    const formData = new FormData();
+    formData.append("message", content);
+    formData.append("chat_id", String(chatId));
+
+    try {
+      const res = await backend("/chat/send", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (data?.reply) {
+        onSend(data.reply, "ai");
+      }
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 p-3 border-t">
       <input
+        className="flex-1 border rounded px-3 py-2"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="flex-1 border rounded px-3 py-2"
-        placeholder="Say something…"
+        placeholder="Type a message…"
+        onKeyDown={(e) => e.key === "Enter" && send()}
       />
       <button
         onClick={send}
-        disabled={loading}
-        className="bg-black text-white px-4 rounded"
+        disabled={sending}
+        className="px-4 py-2 bg-black text-white rounded disabled:opacity-50"
       >
-        {loading ? "…" : "Send"}
+        Send
       </button>
     </div>
   );
